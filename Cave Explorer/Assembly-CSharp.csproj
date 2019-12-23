@@ -63,7 +63,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\CaveGenerator.cs" />
+    <Compile Include="Assets\Scripts\CubeController.cs" />
+    <Compile Include="Assets\Scripts\GameController.cs" />
+    <Compile Include="Assets\Scripts\GoalController.cs" />
     <Compile Include="Assets\Scripts\SphereController.cs" />
+    <Compile Include="Assets\Scripts\TimerController.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>/Users/Hritvik/Desktop/JS-Game/Cave Explorer/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

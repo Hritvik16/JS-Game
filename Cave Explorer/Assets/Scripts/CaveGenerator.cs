@@ -33,9 +33,10 @@ public class CaveGenerator : MonoBehaviour
             createMaze();
         }
         Debug.Log("Path exists");
-        Debug.Log("Start: " + startState);
-        Debug.Log("End: " + goalState);
         renderMaze();
+        Debug.Log("Moving sphere to: " + startState);
+        sphere.GetComponent<Transform>().position = new Vector3(startState.Item1, 0.05f, startState.Item2);
+        //sphere.transform.position = 
     }
 
     void createFloor()
@@ -86,17 +87,15 @@ public class CaveGenerator : MonoBehaviour
                 {
                     if (i == startState.Item1 && j == startState.Item2)
                     {
-                        Vector3 position = new Vector3(i, 0.5f, j);
-                        Quaternion rotation = new Quaternion();
-                        sphere.transform.position = position;                     
-                        Debug.Log("hi");
+                        Debug.Log("Start: " + startState);
+
                     }
                     if (i == goalState.Item1 && j == goalState.Item2)
                     {
                         Vector3 position = new Vector3(i, 0.5f, j);
                         Quaternion rotation = new Quaternion();
                         Instantiate(end, position, rotation);
-                        Debug.Log("there");
+                        Debug.Log("End: " + goalState);
                     }
                 }
 

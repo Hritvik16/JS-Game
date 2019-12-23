@@ -7,7 +7,8 @@ public class SphereController : MonoBehaviour
     private Rigidbody rb;
     public Camera camera;
     public float x_speed;
-    public float y_speed;
+    public float z_speed;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,8 +26,15 @@ public class SphereController : MonoBehaviour
 
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
+        if (moveVertical == 0)
+        {
+            rb.AddForce(new Vector3(moveHorizontal * x_speed, 0.0f, z_speed));
+        }
+        else
+        {
+            rb.AddForce(new Vector3(moveHorizontal * x_speed, 0.0f, moveVertical * z_speed));
+        }
 
-        rb.AddForce(new Vector3(moveHorizontal * x_speed, 0.0f, moveVertical * x_speed));
         Vector3 currentPosition = this.transform.position;
         camera.transform.position = new Vector3(currentPosition.x, 3, currentPosition.z);
     }
