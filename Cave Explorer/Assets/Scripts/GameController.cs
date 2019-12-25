@@ -47,7 +47,7 @@ public class GameController : MonoBehaviour
         }
         else
         { 
-            Debug.Log("State updated!");
+            //Debug.Log("State updated!");
         }
     }
 
@@ -56,9 +56,28 @@ public class GameController : MonoBehaviour
         UnityWebRequest request = UnityWebRequest.Get("http://127.0.0.1:5000/Server?source=GAME");
         yield return request.SendWebRequest();
 
-        int action = int.Parse(request.downloadHandler.text);
-        if(action != -1)
-            sphere.GetComponent<SphereController>().move(action);
+        string action = request.downloadHandler.text;
+        //Debug.Log(action);
+        if(action.Contains("0"))
+        {
+            sphere.GetComponent<SphereController>().move(0);
+            Debug.Log(action);
+        } 
+        else if(action.Contains("1") && !action.Contains("-")) 
+        {
+            sphere.GetComponent<SphereController>().move(1);
+            Debug.Log(action);
+        } 
+        else if (action.Contains("2"))
+        {
+            sphere.GetComponent<SphereController>().move(2);
+            Debug.Log(action);
+        }
+        else if (action.Contains("3"))
+        {
+            sphere.GetComponent<SphereController>().move(3);
+            Debug.Log(action);
+        }
     }
 
     public void wallHit()

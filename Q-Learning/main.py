@@ -1,57 +1,41 @@
-from flask import Flask
-from flask_restful import Api, Resource, reqparse
-
+import requests
 import numpy as np
 import random
 
-app = Flask(__name__)
-api = Api(app)
 
-# Q = np.zeros((25, 4))
-# y = 0.95
-# eps = 0.5
-# lr = 0.8
+URL = "http://127.0.0.1:5000/Server"
 
-# decay_factor = 0.999
+Q = np.zeros((25, 4))
+y = 0.95
+eps = 0.5
+lr = 0.8
 
-# latest_state = -1;
+decay_factor = 0.999
 
-class Model(Resource):
-    current_action = -1;
-    current_state = {
-    "state": None,
-    "reward": None,
-    "finished": None
-}
-    def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument("source")
-        parser.add_argument("state")
-        parser.add_argument("reward")
-        parser.add_argument("finished")
+state = requests.get(URL + "?source=AI").json()
+s = int(state["state"])
 
-        parser.add_argument("action")
-        args = parser.parse_args()
+while True:
+    # print(requests.get(URL + "?source=AI").json())
+    if np.random.random() < eps or np.sum(Q[s, :]) == 0:
+        a = np.random.randint(0, 4)
+    else:
+        a = np.argmax(Q[s, :])
+    
+    json = {
+        "source": "AI",
+        "state": s,
+        "reward": state["reward"],
+        "finished": state["finished"],
+        "action": a
+    }
+    # print(a)
+    post_response = requests.post(URL, json).json()
+    print(post_response);
+    new_state = requests.get(URL + "?source=AI").json()
+    new_s = int(state["state"])
 
-        if(args["source"] == "AI"):
-            self.current_action = args["action"]
-        else:
-            self.current_state["state"] = args["state"]
-            self.current_state["reward"] = args["reward"]
-            self.current_state["finished"] = args["finished"]
 
-        
-        print(self.current_state)
-        return self.current_state, 201
-
-    def get(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument("source")
-        args = parser.parse_args()
-        if(args["source"] == "AI"):
-            return self.current_state
-        else:
-            return self.current_action
-
-api.add_resource(Model, "/Server")
-app.run(debug=True)
+    Q[s, a] += int(new_state["reward"]) + lr * (y * np.max(Q[new_s, :]))
+    state = new_state
+    s = new_s
