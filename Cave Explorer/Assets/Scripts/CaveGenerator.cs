@@ -51,6 +51,23 @@ public class CaveGenerator : MonoBehaviour
             }
         }
     }
+    public int isWall((int, int) state)
+    {
+        if (state.Item1 == 0 || state.Item2 == 0 ||
+            state.Item1 == size - 1 || state.Item2 == size - 1 )
+            return 0;
+        return 1;
+    }
+    public int Reward((int, int) state)
+    {
+        int goalDist = -(Mathf.Abs(goalState.Item1 - state.Item1) + Mathf.Abs(goalState.Item2 - state.Item2) ) ;
+        int hazardReward = 0;
+        if(bitMap[state.Item1, state.Item2] == 0)
+        {
+            hazardReward = -10;
+        }
+        return goalDist + hazardReward;
+    }
 
     void createMaze()
     {
@@ -71,6 +88,7 @@ public class CaveGenerator : MonoBehaviour
         // Create a heuristic that tells you how far you are from the goal
         // Create a random path starting from start state to goal state and then randomly populate the rest of the map with walls
     }
+
     void renderMaze()
     {
         for (int i = 0; i < size; i++)
